@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Catálogo de Obras - Johan Mancebo</title>
+    <style>
+        /* Estilos CSS */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; margin: 0; padding: 20px; color: #333; }
+        h1 { text-align: center; color: #004d99; margin-bottom: 40px; }
+        
+        /* Definición de colores para secciones */
+        .seccion-titulo { width: 100%; text-align: center; padding-bottom: 10px; margin: 50px 0 30px; font-size: 1.8em; }
+        .seccion-politica { color: #dc3545; border-bottom: 2px solid #dc3545; } /* Rojo/Carmesí para Política */
+        .seccion-filosofia { color: #007bff; border-bottom: 2px solid #007bff; } /* Azul para Filosofía */
+        .seccion-biblica { color: #6f42c1; border-bottom: 2px solid #6f42c1; } /* Morado para Estudios Bíblicos */
+        .seccion-cuento { color: #28a745; border-bottom: 2px solid #28a745; } /* Verde para Cuentos */
+
+        .contenedor { display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; }
+
+        .card { 
+            background-color: white; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 12px; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1); 
+            width: 320px; 
+            overflow: hidden; 
+            text-align: center;
+            transition: transform 0.3s ease;
+            position: relative; 
+            /* Se añade el display para el año */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
+
+        /* Nuevo estilo para mostrar el año */
+        .card::before {
+            content: attr(data-anio);
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: #343a40; /* Fondo oscuro para el año */
+            color: white;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: bold;
+            z-index: 10;
+        }
+
+        .estado-etiqueta {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ffc107; 
+            color: #333;
+            padding: 5px 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+        .etiqueta-biblica { background-color: #9370db !important; color: white !important; }
+        .etiqueta-cuento { background-color: #17a2b8 !important; }
+
+        .card-imagen {
+            width: 100%;
+            height: 180px;
+            background-color: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #6c757d;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .card-contenido {
+            padding: 15px;
+            flex-grow: 1; /* Permite que el contenido ocupe el espacio */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-contenido h3 { 
+            color: #1e3a5f; 
+            margin-top: 0; 
+            font-size: 1.4em;
+        }
+        .card-contenido p {
+            font-size: 0.95em;
+            color: #555;
+            min-height: 50px;
+        }
+
+        .btn-ver {
+            display: inline-block;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            margin-bottom: 5px; /* Margen inferior ajustado */
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        /* Colores de botones por categoría */
+        .btn-politica { background-color: #dc3545; }
+        .btn-politica:hover { background-color: #c82333; }
+        
+        .btn-filosofia { background-color: #007bff; }
+        .btn-filosofia:hover { background-color: #0056b3; }
+        
+        .btn-biblico { background-color: #6f42c1; }
+        .btn-biblico:hover { background-color: #5a3597; }
+        
+        .btn-cuento { background-color: #28a745; }
+        .btn-cuento:hover { background-color: #1e7e34; }
+
+        /* Sección Sobre Mí */
+        .sobre-mi {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-left: 5px solid #004d99;
+            display: flex; 
+            align-items: flex-start; 
+            gap: 25px; 
+        }
+        .sobre-mi-contenido {
+            flex-grow: 1; 
+        }
+        .sobre-mi h2 {
+            color: #004d99;
+            margin-top: 0;
+            border-bottom: 1px dashed #ccc;
+            padding-bottom: 10px;
+        }
+        .sobre-mi p {
+            line-height: 1.6;
+            font-size: 1.1em;
+            margin-bottom: 0; 
+        }
+        .sobre-mi-imagen {
+            width: 150px; 
+            height: 150px;
+            border-radius: 50%; 
+            object-fit: cover; 
+            border: 3px solid #004d99; 
+            flex-shrink: 0; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sobre-mi">
+        <img src="https://via.placeholder.com/150x150?text=Tu+Foto" alt="Foto de Johan Mancebo" class="sobre-mi-imagen">
+        <div class="sobre-mi-contenido">
+            <h2>Sobre Mí</h2>
+            <p>
+                Mi nombre es Johan Mancebo y soy escritor y novelista dominicano. Para mí, la escritura es una forma de explorar tanto el mundo exterior, a través del análisis político y social, como el mundo interior, por medio de la filosofía y el desarrollo personal. Sin embargo, no hay nada más preciado en mi vida que mi familia. Ellos son la inspiración y el ancla que me permite crear y compartir mis obras con el mundo.
+            </p>
+        </div>
+    </div>
+
+    <h1>Mi Biblioteca Personal</h1>
+    
+    <h2 class="seccion-titulo seccion-biblica">Estudios Bíblicos y Espirituales</h2>
+    <div class="contenedor">
+
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta etiqueta-biblica">En Preparación ⚙️</span>
+            <div class="card-imagen">
+
+[Image of Open Bible/Spiritual Study]
+</div>
+            <div class="card-contenido">
+                <h3>Arrepentimiento</h3>
+                <p>Una guía y estudio profundo basado en textos bíblicos sobre la naturaleza del arrepentimiento y la transformación espiritual.</p>
+                <a href="#" class="btn-ver btn-biblico">Ver</a>
+            </div>
+        </div>
+
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta etiqueta-biblica">En Preparación ⚙️</span>
+            <div class="card-imagen"></div>
+            <div class="card-contenido">
+                <h3>Mi ubicación espiritual</h3>
+                <p>Mi brújula para entender mi posición en la fe, este libro explora el viaje personal hacia el encuentro con la Verdad.</p>
+                <a href="#" class="btn-ver btn-biblico">Ver</a>
+            </div>
+        </div>
+
+    </div>
+
+    <h2 class="seccion-titulo seccion-politica">Política y Crítica Social</h2>
+    <div class="contenedor">
+
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta">En Preparación ⚙️</span>
+            <div class="card-imagen"></div>
+            <div class="card-contenido">
+                <h3>Presión social</h3>
+                <p>Mi análisis de las fuerzas invisibles que modelan el comportamiento colectivo y limitan la libertad individual en la sociedad.</p>
+                <a href="#" class="btn-ver btn-politica">Ver</a>
+            </div>
+        </div>
+
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta">En Preparación ⚙️</span>
+            <div class="card-imagen">
+
+[Image of Political Books]
+</div>
+            <div class="card-contenido">
+                <h3>El lado oscuro del sistema mundialista</h3>
+                <p>Mi riguroso análisis sobre las estructuras de poder global y las dinámicas geopolíticas contemporáneas.</p>
+                <a href="#" class="btn-ver btn-politica">Ver</a>
+            </div>
+        </div>
+
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta">En Preparación ⚙️</span>
+            <div class="card-imagen"></div>
+            <div class="card-contenido">
+                <h3>La Sociedad Idiota</h3>
+                <p>Una sátira filosófica que cuestiona la superficialidad y la falta de pensamiento crítico en la modernidad.</p>
+                <a href="#" class="btn-ver btn-politica">Ver</a>
+            </div>
+        </div>
+        
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta">En Preparación ⚙️</span>
+            <div class="card-imagen"></div>
+            <div class="card-contenido">
+                <h3>1000 años de miseria</h3>
+                <p>Mi obra más ambiciosa, una reflexión profunda sobre los ciclos históricos de sufrimiento y resiliencia humana.</p>
+                <a href="#" class="btn-ver btn-politica">Ver</a>
+            </div>
+        </div>
+
+    </div>
+    
+    <h2 class="seccion-titulo seccion-filosofia">Filosofía y Desarrollo Personal</h2>
+    <div class="contenedor">
+        
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta">En Preparación ⚙️</span>
+            <div class="card-imagen">
+
+[Image of Mental Health/Anxiety]
+</div>
+            <div class="card-contenido">
+                <h3>Ansiedad</h3>
+                <p>Mi estudio sobre el manejo de la preocupación moderna, ofreciendo herramientas filosóficas y prácticas para restaurar la calma.</p>
+                <a href="#" class="btn-ver btn-filosofia">Ver</a>
+            </div>
+        </div>
+
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta">En Preparación ⚙️</span>
+            <div class="card-imagen"></div>
+            <div class="card-contenido">
+                <h3>Nostalgia</h3>
+                <p>Mi meditación sobre la belleza y el peso del pasado, explorando cómo la memoria moldea mi presente y futuro.</p>
+                <a href="#" class="btn-ver btn-filosofia">Ver</a>
+            </div>
+        </div>
+
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta">En Preparación ⚙️</span>
+            <div class="card-imagen">
+
+[Image of Time/Clock]
+</div>
+            <div class="card-contenido">
+                <h3>El tiempo</h3>
+                <p>Mi ensayo profundo sobre la percepción, la relatividad y la importancia del tiempo en la existencia humana.</p>
+                <a href="#" class="btn-ver btn-filosofia">Ver</a>
+            </div>
+        </div>
+
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta">En Preparación ⚙️</span>
+            <div class="card-imagen"></div>
+            <div class="card-contenido">
+                <h3>Tu león interior</h3>
+                <p>Un texto inspiracional que se centra en el coraje y la fuerza interna que necesito para conquistar mis metas.</p>
+                <a href="#" class="btn-ver btn-filosofia">Ver</a>
+            </div>
+        </div>
+
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta">En Preparación ⚙️</span>
+            <div class="card-imagen"></div>
+            <div class="card-contenido">
+                <h3>La llave a tu destino</h3>
+                <p>Mi guía práctica y filosófica para identificar y desbloquear el verdadero propósito de mi vida.</p>
+                <a href="#" class="btn-ver btn-filosofia">Ver</a>
+            </div>
+        </div>
+
+    </div>
+
+    <h2 class="seccion-titulo seccion-cuento">Cuento Corto</h2>
+    <div class="contenedor">
+        
+        <div class="card" data-anio="2026">
+            <span class="estado-etiqueta etiqueta-cuento">En Preparación ⚙️</span>
+            <div class="card-imagen">
+
+[Image of Padlock and Key]
+</div>
+            <div class="card-contenido">
+                <h3>El candado y la llave</h3>
+                <p>Una breve fábula sobre cómo el conflicto y la cooperación son dos caras de la misma moneda para alcanzar un objetivo.</p>
+                <a href="#" class="btn-ver btn-cuento">Ver</a>
+            </div>
+        </div>
+
+        <div class="card" data-anio="2026" style="box-shadow: 0 6px 15px rgba(40,167,69,0.2);">
+            <span class="estado-etiqueta etiqueta-cuento">En Preparación ⚙️</span>
+            <div class="card-imagen"></div>
+            <div class="card-contenido">
+                <h3>La zanahoria y el cuchillo</h3>
+                <p>Una fábula que enseña sobre la importancia del equilibrio entre la paciencia y la acción.</p>
+                <a href="#" class="btn-ver btn-cuento">Ver</a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
